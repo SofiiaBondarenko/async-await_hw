@@ -1,3 +1,9 @@
-export const getStudents= ()=>{
-    return fetch ("http://localhost:3000/students").then((res)=>res.json())
+export async function getStudents() {
+  try {
+    const response = await fetch("http://localhost:3000/students");
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Сталася помилка при отриманні студентів:", error);
+  }
 }

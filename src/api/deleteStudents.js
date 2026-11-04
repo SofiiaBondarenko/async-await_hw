@@ -1,6 +1,11 @@
-export const deleteStudents = (id) => {
-    return fetch(`http://localhost:3000/students/${id}`, {
+export async function deleteStudents(id) {
+  try {
+    const response = await fetch(`http://localhost:3000/students/${id}`, {
         method: "DELETE"
-    }).then((res)=>res.json())
-
+    });
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Сталася помилка при видаленні студентів:", error);
+  }
 }

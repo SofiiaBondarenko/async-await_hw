@@ -8,14 +8,24 @@ const getbtnRef = document.querySelector("#get-students-btn");
 const tbodyRef = document.querySelector("tbody");
 const addStudentRef = document.querySelector("#addStudent-btn");
 const backdropRef = document.querySelector(".backdrop");
-
-// const modalFormRef = document.querySelector("#add-student-form");
 const modalFormRef = document.querySelector(".modal-form");
 
 let currentId = null;
 
-function renderTable() {
-  getStudents().then((res) => (tbodyRef.innerHTML = renderMarkup(res)));
+async function renderTable() {
+  try {
+    const res = await getStudents();
+    
+    // ПЕРЕВІРКА: рендеримо маркап тільки якщо сервер дійсно повернув масив даних
+    if (res && Array.isArray(res)) {
+      tbodyRef.innerHTML = renderMarkup(res);
+    } else {
+      console.warn("Сервер повернув порожні дані або не масив:", res);
+    }
+  } catch (error) {
+    console.error("Помилка рендеру таблиці:", error);
+    alert("Не вдалося завантажити дані студентів.");
+  }
 }
 
 getbtnRef.addEventListener("click", () => {
@@ -37,24 +47,28 @@ function closeModal() {
 backdropRef.addEventListener("click", (evt) => {
   if (evt.target === backdropRef) closeModal();
 });
-addStudentRef.addEventListener('click', ()=>{
-  openModal()
-  modalFormRef.querySelector('.submit').textContent='Create'
-})
 
-tbodyRef.addEventListener("click", (evt) => {
-  if (evt.target.nodeName !== "BUTTON") {
-    return;
-  }
+addStudentRef.addEventListener('click', () => {
+  openModal();
+  modalFormRef.querySelector('.submit').textContent = 'Create';
+});
+
+tbodyRef.addEventListener("click", async (evt) => {
+  if (evt.target.nodeName !== "BUTTON") return;
   
   const action = evt.target.dataset.action;
   const tr = evt.target.closest('tr');
-  
-const id = tr.querySelector(".student-id").textContent.trim();
+  const id = tr.querySelector(".student-id").textContent.trim();
 
   if (action === 'delete') {
     if (confirm("Ви впевнені, що хочете видалити цього студента?")) {
-      deleteStudents(id).then(() => renderTable());
+      try {
+        await deleteStudents(id); 
+        await renderTable();
+      } catch (error) {
+        console.error("Помилка при видаленні:", error);
+        alert("Сталася помилка при видаленні студента.");
+      }
     }
   }
 
@@ -73,10 +87,10 @@ const id = tr.querySelector(".student-id").textContent.trim();
   }
 });
 
-modalFormRef.addEventListener("submit", (evt) => {
+modalFormRef.addEventListener("submit", async (evt) => {
   evt.preventDefault();
 
-  const id = Number(modalFormRef.elements.id.value);
+  const id = modalFormRef.elements.id.value.trim();
   const skillsInput = modalFormRef.elements.skills.value;
   
   const studentData = {
@@ -88,16 +102,18 @@ modalFormRef.addEventListener("submit", (evt) => {
     isEnrolled: modalFormRef.elements.isEnrolled.checked,
   };
 
-  if (currentId === null) {
-    postStudents(studentData).then(() => {
-      closeModal();
-      renderTable();
-    });
-  } else {
-    let targetId = isNaN(id) ? id: Number(id);
-    updateStudents(studentData, targetId).then(() => {
-      closeModal();
-      renderTable();
-    });
+  try {
+    if (currentId === null) {
+      await postStudents(studentData);
+    } else {
+      const targetId = isNaN(id) || id === "" ? id : Number(id);
+      await updateStudents(studentData, targetId);
+    }
+    
+    closeModal();
+    await renderTable();
+  } catch (error) {
+    console.error("Помилка при збереженні форми:", error);
+    alert("Не вдалося зберегти дані студента. Спробуйте ще раз.");
   }
 });

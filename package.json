@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "npx parcel src/index.html",
-    "build": "parcel build src/index.html --public-url /crud_hw/",
+    "build": "parcel build src/index.html --public-url /async_await_hw/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "server": "npx json-server src/data.json "

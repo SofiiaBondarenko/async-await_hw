@@ -1,10 +1,15 @@
-export const postStudents = (studentsData) => {
-  const options = {
-    method: "POST",
-    body: JSON.stringify(studentsData),
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-  };
-  return fetch("http://localhost:3000/students",options).then((res)=>res.json());
-};
+export async function postStudents(studentData) {
+  try {
+    const response = await fetch("http://localhost:3000/students", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;  charset=UTF-8",
+      },
+      body: JSON.stringify(studentData),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Сталася помилка при додаванні студента:", error);
+  }
+}

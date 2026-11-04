@@ -94,7 +94,7 @@ modalFormRef.addEventListener("submit", (evt) => {
       renderTable();
     });
   } else {
-    targetId = isNaN(id) ? id: Number(id);
+    let targetId = isNaN(id) ? id: Number(id);
     updateStudents(studentData, targetId).then(() => {
       closeModal();
       renderTable();

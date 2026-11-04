@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><title>CRUD Students</title><link rel=stylesheet href=/async_await_hw/async_await_hw.78fb0d65.css><body>
+    <div class=container>
+      <h1>Список студентів</h1>
+      <button id=get-students-btn>Отримати студентів</button>
+      <table id=students-table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ім'я</th>
+            <th>Вік</th>
+            <th>Курс</th>
+            <th>Навички</th>
+            <th>Email</th>
+            <th>Статус</th>
+            <th>Дії</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+      <button id=addStudent-btn>Додати студента</button>
+    </div>
+    <div class=backdrop>
+      <div class=modal>
+        <form class=modal-form>
+          <h2>Додати нового студента</h2>
+          <input name=id placeholder="введіть id" class=input>
+          <input name=name placeholder="введіть ім'я" class=input>
+          <input name=age placeholder="введіть вік" class=input>
+          <input name=course placeholder="введіть курс" class=input>
+          <input name=skills placeholder="введіть навички" class=input>
+          <input name=email type=email placeholder="введіть email" class=input>
+
+          <label>Зарахований?<input name=isEnrolled type=checkbox></label>
+          <button class=submit>Create</button>
+        </form>
+      </div>
+    </div>
+    <script type=module src=/async_await_hw/async_await_hw.a008ef21.js></script>
+  
+
+
